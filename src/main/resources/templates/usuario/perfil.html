@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Meu Perfil</title>
+    <link rel="stylesheet" th:href="@{/css/perfil.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
+
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Meu Perfil</h1>
+
+    <div class="info-box">
+        <div class="label">Nome:</div>
+        <div class="value" th:text="${usuario.nome}"></div>
+
+        <div class="label">Email:</div>
+        <div class="value" th:text="${usuario.email}"></div>
+
+        <div class="label">CPF:</div>
+        <div class="value" th:text="${usuario.cpf}"></div>
+
+        <div class="label">Função (Role):</div>
+        <div class="value" th:text="${usuario.role}"></div>
+
+        <div class="label">Endereço:</div>
+        <div class="value">
+            <span th:text="${usuario.endereco.rua}"></span>,
+            <span th:text="${usuario.endereco.numero}"></span> -
+            <span th:text="${usuario.endereco.bairro}"></span>,
+            <span th:text="${usuario.endereco.cidade}"></span> -
+            <span th:text="${usuario.endereco.estado}"></span>
+            <br>
+            CEP: <span th:text="${usuario.endereco.cep}"></span>
+        </div>
+    </div>
+
+    <div class="btn-area">
+        <a class="btn btn-edit" href="/usuario/editar">Editar Dados</a>
+
+        <button class="btn btn-delete" onclick="openModal()">Excluir Conta</button>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-bg" id="modal">
+    <div class="modal-content">
+        <h3>Tem certeza que deseja excluir sua conta?</h3>
+
+        <form method="post" action="/usuario/excluir">
+            <div class="modal-btns">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                <button type="submit" class="btn-confirm">Confirmar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openModal() {
+        document.getElementById("modal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+</script>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

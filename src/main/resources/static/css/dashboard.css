@@ -1,0 +1,137 @@
+/* ==================== LAYOUT GLOBAL ==================== */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f3f4f7;
+}
+
+.dashboard-container {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ==================== HEADER ==================== */
+
+.welcome {
+    display: flex;
+    justify-content: center; /* centraliza o texto */
+    align-items: center;
+    position: relative; /* permite posicionar logout à direita */
+    margin-bottom: 25px;
+}
+
+.welcome-text {
+    margin: 0;
+    font-size: 26px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* ==================== BOTÃO ADICIONAR ==================== */
+
+.dashboard-actions {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.btn-add-lembrete {
+    background: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* ==================== COLUNAS ==================== */
+
+.columns {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+}
+
+.coluna {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+}
+
+.coluna h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* ==================== CARDS ==================== */
+
+.lembretes-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.lembrete-card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 6px solid #999;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.lembrete-card.concluido {
+    opacity: 0.7;
+    background: #e7ffe7;
+}
+
+/* ==================== PRIORIDADES ==================== */
+
+.ALTA { border-left-color: #e74c3c; }
+.MODERADA { border-left-color: #f1c40f; }
+.BAIXA { border-left-color: #2ecc71; }
+
+/* ==================== TEXTOS DO CARD ==================== */
+
+.titulo {
+    font-weight: bold;
+    font-size: 18px;
+    margin: 0 0 5px 0;
+}
+
+.descricao {
+    margin: 0 0 8px 0;
+    color: #444;
+}
+
+.categoria {
+    font-size: 14px;
+    color: #888;
+}
+
+.data small {
+    color: #777;
+}
+
+/* ==================== AÇÕES DO CARD ==================== */
+
+.lembrete-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-edit,
+.btn-delete {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.btn-edit:hover { color: #2980b9; }
+.btn-delete:hover { color: #c0392b; }

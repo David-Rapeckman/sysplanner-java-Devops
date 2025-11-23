@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - SysPlanner</title>
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="dashboard-container">
+
+    <div class="welcome">
+        <h1 class="welcome-text">
+            Bem-vindo, <span th:text="${nomeUsuario}">Usuário</span>!
+        </h1>
+    </div>
+    <main>
+        <div class="dashboard-actions">
+            <a th:href="@{/lembretes/create}" class="btn-add-lembrete">+ Adicionar Lembrete</a>
+        </div>
+
+        <div class="columns">
+
+            <!-- ======================= NÃO CONCLUÍDOS ======================= -->
+            <section class="coluna">
+                <h2>⏳ Pendentes</h2>
+
+                <div class="lembretes-grid">
+                    <div class="lembrete-card"
+                         th:each="lembrete : ${lembretes}"
+                         th:if="${lembrete.concluido == 'N'}"
+                         th:classappend="${lembrete.prioridade.name()}">
+
+                        <p class="titulo" th:text="${lembrete.titulo}">Título</p>
+                        <p class="descricao" th:text="${lembrete.descricao}">Descrição</p>
+
+                        <p class="categoria">
+                            Categoria: <span th:text="${lembrete.categoria}"></span>
+                        </p>
+
+                        <p class="data">
+                            <small th:text="${#temporals.format(lembrete.data, 'dd/MM/yyyy HH:mm')}">Data</small>
+                        </p>
+
+                        <div class="lembrete-actions">
+                            <a th:href="@{/lembretes/edit/{id}(id=${lembrete.id})}" class="btn-edit">✏️</a>
+
+                            <form th:action="@{/lembretes/delete/{id}(id=${lembrete.id})}" method="post">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button type="submit" class="btn-delete">🗑️</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ======================== CONCLUÍDOS =========================== -->
+            <section class="coluna concluido-coluna">
+                <h2>✅ Concluídos</h2>
+
+                <div class="lembretes-grid">
+                    <div class="lembrete-card concluido"
+                         th:each="lembrete : ${lembretes}"
+                         th:if="${lembrete.concluido == 'S'}"
+                         th:classappend="${lembrete.prioridade.name()}">
+
+                        <p class="titulo" th:text="${lembrete.titulo}">Título</p>
+                        <p class="descricao" th:text="${lembrete.descricao}">Descrição</p>
+
+                        <p class="categoria">
+                            Categoria: <span th:text="${lembrete.categoria}"></span>
+                        </p>
+
+                        <p class="data">
+                            <small th:text="${#temporals.format(lembrete.data, 'dd/MM/yyyy HH:mm')}">Data</small>
+                        </p>
+
+                        <div class="lembrete-actions">
+                            <a th:href="@{/lembretes/edit/{id}(id=${lembrete.id})}" class="btn-edit">✏️</a>
+
+                            <form th:action="@{/lembretes/delete/{id}(id=${lembrete.id})}" method="post">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button type="submit" class="btn-delete">🗑️</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

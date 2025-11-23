@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciar Usuários</title>
+    <link rel="stylesheet" th:href="@{/css/usuarios.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<header>
+    <h1>Gerenciar Usuários</h1>
+</header>
+
+<section class="container">
+
+    <!-- FILTROS -->
+    <form th:action="@{/gerenciar/usuarios}" method="get" class="filter-form">
+        <input type="text" name="nome" placeholder="Nome" th:value="${filtro.nome}">
+        <input type="text" name="email" placeholder="Email" th:value="${filtro.email}">
+        <input type="text" name="cpf" placeholder="CPF" th:value="${filtro.cpf}">
+        <input type="text" name="cidade" placeholder="Cidade" th:value="${filtro.cidade}">
+        <select name="estado">
+            <option value="">Todos os Estados</option>
+            <option th:each="e : ${T(com.sys.sysplanner.domain.enums.Estado).values()}"
+                    th:value="${e}"
+                    th:text="${e}"
+                    th:selected="${filtro.estado == e}"></option>
+        </select>
+        <button type="submit">Filtrar</button>
+        <a th:href="@{/gerenciar/usuarios}" class="btn cancel">Limpar</a>
+    </form>
+
+    <div class="list-header">
+        <span>ID</span>
+        <span>Nome</span>
+        <span>Email</span>
+        <span>CPF</span>
+    </div>
+
+    <div th:each="u : ${usuarios}" class="user-row">
+        <details>
+            <summary>
+                <span th:text="${u.id}">1</span>
+                <span th:text="${u.nome}">Nome</span>
+                <span th:text="${u.email}">email@email.com</span>
+                <span th:text="${u.cpf}">00000000000</span>
+            </summary>
+
+            <div class="details-box">
+                <p><strong>Nome:</strong> <span th:text="${u.nome}"></span></p>
+                <p><strong>Email:</strong> <span th:text="${u.email}"></span></p>
+                <p><strong>CPF:</strong> <span th:text="${u.cpf}"></span></p>
+                <h3>Endereço</h3>
+                <p><strong>Rua:</strong> <span th:text="${u.endereco.rua}"></span></p>
+                <p><strong>Número:</strong> <span th:text="${u.endereco.numero}"></span></p>
+                <p><strong>Bairro:</strong> <span th:text="${u.endereco.bairro}"></span></p>
+                <p><strong>Cidade:</strong> <span th:text="${u.endereco.cidade}"></span></p>
+                <p><strong>Estado:</strong> <span th:text="${u.endereco.estado}"></span></p>
+                <p><strong>CEP:</strong> <span th:text="${u.endereco.cep}"></span></p>
+
+                <div class="actions">
+                    <a th:href="@{'/gerenciar/usuario/editar/' + ${u.id}}" class="btn edit">Editar</a>
+                    <a href="#"
+                       class="btn delete"
+                       th:attr="data-url=@{'/gerenciar/usuario/excluir/' + ${u.id}}"
+                       onclick="openDeleteModal(this)">
+                        Excluir
+                    </a>
+                </div>
+            </div>
+
+        </details>
+    </div>
+
+    <!-- PAGINAÇÃO -->
+    <div class="pagination">
+        <a th:if="${currentPage > 0}" th:href="@{/gerenciar/usuarios(page=${currentPage-1}, nome=${filtro.nome}, email=${filtro.email}, cpf=${filtro.cpf}, cidade=${filtro.cidade}, estado=${filtro.estado})}">Previous</a>
+        <span>Página <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span></span>
+        <a th:if="${currentPage + 1 < totalPages}" th:href="@{/gerenciar/usuarios(page=${currentPage+1}, nome=${filtro.nome}, email=${filtro.email}, cpf=${filtro.cpf}, cidade=${filtro.cidade}, estado=${filtro.estado})}">Next</a>
+    </div>
+
+</section>
+
+<!-- Modal de Confirmação -->
+<div id="confirmModal" class="modal-overlay" style="display:none;">
+    <div class="modal">
+        <h2>Confirmar Exclusão</h2>
+        <p>Tem certeza que deseja excluir este usuário?</p>
+
+        <div class="modal-buttons">
+            <button id="cancelDelete" class="btn cancel">Cancelar</button>
+            <a id="confirmDelete" class="btn delete-confirm">Excluir</a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+    function openDeleteModal(element) {
+        const url = element.getAttribute("data-url");
+        document.getElementById("confirmDelete").setAttribute("href", url);
+        document.getElementById("confirmModal").style.display = "flex";
+    }
+
+    document.getElementById("cancelDelete").onclick = function () {
+        document.getElementById("confirmModal").style.display = "none";
+    };
+</script>
+
+</body>
+</html>

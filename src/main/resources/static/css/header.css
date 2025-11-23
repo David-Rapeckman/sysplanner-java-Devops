@@ -1,0 +1,81 @@
+/* HEADER GLOBAL */
+.main-header {
+    width: 100%;
+    background: #1e1e2f;
+    color: #fff;
+    padding: 12px 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* NAV esquerda */
+.header-left {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-btn {
+    color: #e0e0e0;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.nav-btn:hover {
+    background: #2d2d42;
+    color: #fff;
+}
+
+/* LOGO central */
+.header-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+.logo:hover {
+    color: #b5c9ff;
+}
+
+/* BOTÃO logout */
+.logout-btn {
+    background: #d9534f;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.2s;
+    margin-right: 50px;
+}
+
+.logout-btn:hover {
+    background: #c9302c;
+}
+
+@media (max-width: 700px) {
+    .main-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-center {
+        position: relative;
+        left: 0;
+        transform: none;
+    }
+}

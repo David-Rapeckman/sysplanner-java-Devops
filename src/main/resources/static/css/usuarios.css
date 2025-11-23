@@ -1,0 +1,242 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+/* Header da lista */
+.list-header {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 160px;
+    background: #34495e;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* Linhas */
+.user-row details {
+    background: white;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+}
+
+.user-row summary {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr 160px;
+    padding: 15px 20px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 15px;
+    align-items: center;
+}
+
+summary::-webkit-details-marker {
+    display: none;
+}
+
+.user-row summary:hover {
+    background: #f0f0f0;
+}
+
+/* Caixa expandida */
+.details-box {
+    padding: 20px;
+    background: #fafafa;
+    border-top: 1px solid #ddd;
+}
+
+.details-box p {
+    margin: 6px 0;
+}
+
+.details-box h3 {
+    margin-top: 15px;
+    color: #2c3e50;
+}
+
+.actions {
+    margin-top: 20px;
+}
+
+/* Botões */
+.btn {
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.btn.edit {
+    background: #2980b9;
+}
+
+.btn.edit:hover {
+    background: #1f6390;
+}
+
+.btn.delete {
+    background: #c0392b;
+}
+
+.btn.delete:hover {
+    background: #922b21;
+}
+
+/* ==================================
+   MODAL DE CONFIRMAÇÃO — NOVO
+   ================================== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none; /* começa escondido */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal {
+    background: #fff;
+    padding: 25px;
+    width: 380px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    text-align: center;
+    animation: fadeIn .25s ease;
+}
+
+.modal h2 {
+    margin-bottom: 15px;
+    font-size: 22px;
+    color: #333;
+}
+
+.modal p {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #444;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn.cancel {
+    background: #777;
+}
+
+.btn.cancel:hover {
+    background: #666;
+}
+
+.btn.delete-confirm {
+    background: #e63946;
+}
+
+.btn.delete-confirm:hover {
+    background: #c72734;
+}
+
+/* FILTROS */
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-form input,
+.filter-form select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    flex: 1;
+    min-width: 120px;
+    font-size: 14px;
+    appearance: none; /* remove setinha padrão do select */
+    background: white;
+}
+
+.filter-form select {
+    cursor: pointer;
+}
+
+.filter-form button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.filter-form button:hover {
+    background: #1e8449;
+}
+
+.filter-form .btn.cancel {
+    background: #7f8c8d;
+    text-decoration: none;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-form .btn.cancel:hover {
+    background: #616a6b;
+}
+
+/* PAGINAÇÃO */
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+    font-weight: bold;
+}
+
+.pagination a {
+    padding: 8px 14px;
+    background: #2980b9;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    background: #1f6390;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+}
+

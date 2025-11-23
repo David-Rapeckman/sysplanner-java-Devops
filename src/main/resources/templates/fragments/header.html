@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<header th:fragment="header" class="main-header">
+
+    <!-- LADO ESQUERDO -->
+    <div class="header-left">
+        <a th:href="@{/dashboard}" class="nav-btn">Dashboard</a>
+        <a th:href="@{/usuario/perfil}" class="nav-btn">Meu Perfil</a>
+        <!-- Apenas ADMIN pode ver -->
+        <a sec:authorize="hasRole('ADMIN')"
+           th:href="@{/gerenciar/usuarios}"
+           class="nav-btn">Gerenciar Usuários
+        </a>
+        <a sec:authorize="hasRole('ADMIN')"
+           th:href="@{/admin/dashboard}"
+           class="nav-btn">Painel Admnistrativo
+        </a>
+    </div>
+
+    <!-- CENTRO -->
+    <div class="header-center">
+        <a th:href="@{/dashboard}" class="logo">SysPlanner</a>
+    </div>
+
+    <!-- DIREITA -->
+    <div class="header-right">
+        <a th:href="@{/logout}" class="logout-btn">Logout</a>
+    </div>
+
+</header>
+
+</body>
+</html>

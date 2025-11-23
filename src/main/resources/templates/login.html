@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - SysPlanner</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<div class="login-container">
+    <h2>SysPlanner Login</h2>
+    <form th:action="@{/login}" method="post">
+        <div>
+            <label>Email:</label>
+            <input type="email" name="username" placeholder="Digite seu email" required/>
+        </div>
+        <div>
+            <label>Senha:</label>
+            <input type="password" name="password" placeholder="Digite sua senha" required/>
+        </div>
+        <div th:if="${param.error}" class="message error">
+            Credenciais inválidas
+        </div>
+        <div th:if="${param.logout}" class="message success">
+            Logout realizado com sucesso
+        </div>
+        <div>
+            <button type="submit">Entrar</button>
+        </div>
+    </form>
+    <p>Ainda não possui conta? <a th:href="@{/register}">Cadastre-se</a></p>
+</div>
+</body>
+</html>

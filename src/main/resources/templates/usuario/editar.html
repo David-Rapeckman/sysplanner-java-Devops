@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" th:href="@{/css/editar.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+</head>
+
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Editar Perfil</h1>
+    <!-- Bloco de erro -->
+    <div th:if="${erro}" class="alert alert-error">
+        <p th:text="${erro}"></p>
+    </div>
+    <form th:action="@{/usuario/editar}" method="post" th:object="${dto}">
+
+        <!-- Nome -->
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input id="nome" type="text" th:field="*{nome}" required>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input id="email" type="email" th:field="*{email}" required>
+        </div>
+
+        <h2>Endereço</h2>
+
+        <!-- Rua -->
+        <div class="form-group">
+            <label for="rua">Rua:</label>
+            <input id="rua" type="text" th:field="*{endereco.rua}" required>
+        </div>
+
+        <!-- Número -->
+        <div class="form-group">
+            <label for="numero">Número:</label>
+            <input id="numero" type="text" th:field="*{endereco.numero}" required>
+        </div>
+
+        <!-- Bairro -->
+        <div class="form-group">
+            <label for="bairro">Bairro:</label>
+            <input id="bairro" type="text" th:field="*{endereco.bairro}" required>
+        </div>
+
+        <!-- Cidade -->
+        <div class="form-group">
+            <label for="cidade">Cidade:</label>
+            <input id="cidade" type="text" th:field="*{endereco.cidade}" required>
+        </div>
+
+        <!-- Estado -->
+        <div class="form-group">
+            <label for="estado">Estado:</label>
+            <input id="estado" type="text" th:field="*{endereco.estado}" maxlength="2" required>
+        </div>
+
+        <!-- CEP -->
+        <div class="form-group">
+            <label for="cep">CEP:</label>
+            <input id="cep" type="text" th:field="*{endereco.cep}" required>
+        </div>
+
+        <div class="btn-area">
+            <button type="submit" class="btn btn-save">Salvar Alterações</button>
+
+            <a href="/usuario/perfil" class="btn btn-cancel">Cancelar</a>
+        </div>
+    </form>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Lembrete</title>
+    <link rel="stylesheet" th:href="@{/css/lembrete-edit.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+</head>
+<body>
+<div class="container">
+    <h2>Editar Lembrete</h2>
+
+    <form th:action="@{/lembretes/update/{id}(id=${lembrete.id})}" method="post" th:object="${lembrete}">
+        <input type="hidden" th:field="*{id}" />
+        <input type="hidden" th:field="*{usuarioId}" />
+
+        <div class="form-group">
+            <label for="titulo">Título</label>
+            <input type="text" id="titulo" th:field="*{titulo}" placeholder="Título do lembrete" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="descricao">Descrição</label>
+            <textarea id="descricao" th:field="*{descricao}" placeholder="Descrição do lembrete" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="prioridade">Prioridade</label>
+            <select id="prioridade" th:field="*{prioridade}">
+                <option value="ALTA" th:selected="${lembrete.prioridade.name() == 'ALTA'}">Alta</option>
+                <option value="MODERADA" th:selected="${lembrete.prioridade.name() == 'MODERADA'}">Moderada</option>
+                <option value="BAIXA" th:selected="${lembrete.prioridade.name() == 'BAIXA'}">Baixa</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="categoria">Categoria</label>
+            <select id="categoria" th:field="*{categoria}">
+                <option value="SAUDE" th:selected="${lembrete.categoria.name() == 'SAUDE'}">Saúde</option>
+                <option value="LAZER" th:selected="${lembrete.categoria.name() == 'LAZER'}">Lazer</option>
+                <option value="PROFISSIONAL" th:selected="${lembrete.categoria.name() == 'PROFISSIONAL'}">Profissional</option>
+                <option value="FAMILIA" th:selected="${lembrete.categoria.name() == 'FAMILIA'}">Família</option>
+                <option value="OUTRO" th:selected="${lembrete.categoria.name() == 'OUTRO'}">Outro</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="concluido">Concluído</label>
+            <select id="concluido" th:field="*{concluido}">
+                <option value="N" th:selected="${lembrete.concluido == 'N'}">Não</option>
+                <option value="S" th:selected="${lembrete.concluido == 'S'}">Sim</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="data">Data</label>
+            <input type="datetime-local" id="data" th:field="*{data}" required/>
+        </div>
+
+        <button type="submit" class="btn-save">Salvar</button>
+    </form>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

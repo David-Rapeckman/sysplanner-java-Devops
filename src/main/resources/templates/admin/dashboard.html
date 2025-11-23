@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin - SysPlanner</title>
+    <link rel="stylesheet" th:href="@{/css/dashboardadm.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="dashboard-container">
+
+    <h1>Dashboard Administrativa</h1>
+
+    <!-- ====== RESUMO GERAL ====== -->
+    <section class="resumo-geral">
+        <div class="card">
+            <h3>Total de Usuários</h3>
+            <p th:text="${totalUsuarios}">0</p>
+        </div>
+        <div class="card">
+            <h3>Média de Lembretes por Usuário</h3>
+            <p th:text="${#numbers.formatDecimal(mediaLembretes, 1, 2)}">0.0</p>
+        </div>
+        <div class="card">
+            <h3>Últimos Usuários</h3>
+            <ul>
+                <li th:each="u : ${ultimosUsuarios}" th:text="${u.nome}">Usuário</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ====== GRÁFICOS ====== -->
+    <section class="graficos">
+        <div class="chart-card">
+            <h3>Distribuição de Roles</h3>
+            <canvas id="rolesChart"></canvas>
+        </div>
+        <div class="chart-card">
+            <h3>Distribuição de Categorias</h3>
+            <canvas id="categoriasChart"></canvas>
+        </div>
+    </section>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script th:inline="javascript">
+    // Distribuição de Roles
+    const rolesData = /*[[${rolesDistribuicao}]]*/ {};
+    const rolesLabels = Object.keys(rolesData);
+    const rolesValues = Object.values(rolesData);
+
+    new Chart(document.getElementById('rolesChart'), {
+        type: 'doughnut',
+        data: {
+            labels: rolesLabels,
+            datasets: [{
+                data: rolesValues,
+                backgroundColor: ['#2980b9', '#c0392b', '#27ae60', '#f39c12'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } }
+        }
+    });
+
+    // Distribuição de Categorias
+    const categoriasData = /*[[${categoriasDistribuicao}]]*/ {};
+    const categoriasLabels = Object.keys(categoriasData);
+    const categoriasValues = Object.values(categoriasData);
+
+    new Chart(document.getElementById('categoriasChart'), {
+        type: 'bar',
+        data: {
+            labels: categoriasLabels,
+            datasets: [{
+                label: 'Quantidade',
+                data: categoriasValues,
+                backgroundColor: '#2980b9'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+
+</body>
+</html>
