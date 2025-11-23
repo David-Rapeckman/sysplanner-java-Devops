@@ -1,0 +1,128 @@
+# infra-webapp.ps1
+# Provisiona toda a infraestrutura no Azure via CLI para o SysPlanner (Java + Azure SQL).
+
+param(
+    [string]$Location         = "brazilsouth",
+    [string]$ResourceGroup    = "rg-sysplanner-java",
+    [string]$AppServicePlan   = "asp-sysplanner-linux",
+    # Web App precisa ser único globalmente
+    [string]$WebAppName       = "sysplanner-java-001",
+    # SQL Server também precisa ser único globalmente
+    [string]$SqlServerName    = "sysplanner-sql-001",
+    [string]$SqlAdminUser     = "sysplanneradmin",
+    [string]$SqlAdminPassword = "SysPl@nn3r#2025",
+    [string]$SqlDbName        = "sysplannerdb"
+)
+
+Write-Host "==> Validando login no Azure..."
+az account show 1>$null 2>$null
+if ($LASTEXITCODE -ne 0) {
+    Write-Error "Você não está logado. Rode 'az login' e execute o script novamente."
+    exit 1
+}
+
+# Resource Group
+Write-Host "==> Validando Resource Group '$ResourceGroup'..."
+$rgExists = az group exists -n $ResourceGroup
+if ($rgExists -eq "false") {
+    Write-Host "    Criando Resource Group..."
+    az group create --name $ResourceGroup --location $Location -o none
+} else {
+    Write-Host "    Resource Group já existe. Reutilizando."
+}
+
+# App Service Plan (Linux)
+Write-Host "==> Validando App Service Plan '$AppServicePlan'..."
+$planJson = az appservice plan show --name $AppServicePlan --resource-group $ResourceGroup 2>$null
+if (-not $planJson) {
+    Write-Host "    Criando App Service Plan Linux (B1)..."
+    az appservice plan create `
+        --name $AppServicePlan `
+        --resource-group $ResourceGroup `
+        --location $Location `
+        --sku B1 `
+        --is-linux -o none
+} else {
+    Write-Host "    App Service Plan já existe. Reutilizando."
+}
+
+# Descobrir runtime Java 17 (Linux)
+Write-Host "==> Obtendo runtime Java 17 suportado para Linux..."
+$runtimes = az webapp list-runtimes --os-type linux -o tsv 2>$null
+
+if (-not $runtimes) {
+    Write-Error "Não foi possível obter a lista de runtimes. Verifique se o Azure CLI está atualizado."
+    exit 1
+}
+
+$javaRuntime = $runtimes |
+    Where-Object { $_ -match "(?i)java" -and $_ -match "17" } |
+    Select-Object -First 1
+
+if (-not $javaRuntime) {
+    Write-Error "Runtime Java 17 não encontrado na lista. Rode 'az webapp list-runtimes --os-type linux -o table' para conferir o nome exato e ajuste manualmente neste script na variável `$javaRuntime`."
+    Write-Host "Lista de runtimes disponíveis:"
+    Write-Host $runtimes
+    exit 1
+}
+
+$javaRuntime = $javaRuntime.Trim()
+Write-Host "    Usando runtime: $javaRuntime"
+
+# Web App
+Write-Host "==> Validando Web App '$WebAppName'..."
+$webAppJson = az webapp show --name $WebAppName --resource-group $ResourceGroup 2>$null
+if (-not $webAppJson) {
+    Write-Host "    Criando Web App..."
+    az webapp create `
+        --name $WebAppName `
+        --resource-group $ResourceGroup `
+        --plan $AppServicePlan `
+        --runtime "$javaRuntime" `
+        -o none
+} else {
+    Write-Host "    Web App já existe. Reutilizando."
+}
+
+# Azure SQL Server
+Write-Host "==> Validando Azure SQL Server '$SqlServerName'..."
+$sqlServerJson = az sql server show --name $SqlServerName --resource-group $ResourceGroup 2>$null
+if (-not $sqlServerJson) {
+    Write-Host "    Criando Azure SQL Server..."
+    az sql server create `
+        --name $SqlServerName `
+        --resource-group $ResourceGroup `
+        --location $Location `
+        --admin-user $SqlAdminUser `
+        --admin-password $SqlAdminPassword `
+        -o none
+
+    Write-Host "    Criando regra de firewall para Serviços Azure..."
+    az sql server firewall-rule create `
+        --name AllowAzureServices `
+        --resource-group $ResourceGroup `
+        --server $SqlServerName `
+        --start-ip-address 0.0.0.0 `
+        --end-ip-address 0.0.0.0 `
+        -o none
+} else {
+    Write-Host "    SQL Server já existe. Reutilizando."
+}
+
+# Database
+Write-Host "==> Validando Database '$SqlDbName'..."
+$sqlDbJson = az sql db show --name $SqlDbName --server $SqlServerName --resource-group $ResourceGroup 2>$null
+if (-not $sqlDbJson) {
+    Write-Host "    Criando Database..."
+    az sql db create `
+        --name $SqlDbName `
+        --server $SqlServerName `
+        --resource-group $ResourceGroup `
+        --service-objective S0 `
+        -o none
+} else {
+    Write-Host "    Database já existe. Reutilizando."
+}
+
+Write-Host "✅ Infraestrutura SysPlanner provisionada/validada com sucesso."
+Write-Host "Próximo passo: rodar 'config-webapp.ps1' e depois 'deploy-jar.ps1'."
