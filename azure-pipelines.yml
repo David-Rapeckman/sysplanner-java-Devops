@@ -1,0 +1,93 @@
+trigger:
+  branches:
+    include:
+      - main
+
+# Cada commit na main dispara a pipeline.
+# A proteção "só via PR" você configura nas policies da branch no Azure DevOps.
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  JAVA_VERSION: '17'
+  RG: 'rg-sysplanner-java'
+  APP_NAME: 'sysplanner-java-001'
+  ARTIFACT_NAME: 'drop'
+  JAR_NAME: 'sysplanner-0.0.1-SNAPSHOT.jar'
+
+stages:
+# ============================
+# Stage 1 - Build
+# ============================
+- stage: Build
+  displayName: 'Build SysPlanner'
+  jobs:
+    - job: BuildJob
+      displayName: 'Compilar e testar com Maven'
+      steps:
+        - task: UseJavaVersion@1
+          displayName: 'Selecionar Java $(JAVA_VERSION)'
+          inputs:
+            versionSpec: '$(JAVA_VERSION)'
+            jdkArchitectureOption: 'x64'
+
+        - task: Maven@4
+          displayName: 'Maven clean test package'
+          inputs:
+            mavenPomFile: 'pom.xml'
+            goals: 'clean test package'
+            publishJUnitResults: true
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            javaHomeOption: 'JDKVersion'
+            jdkVersionOption: '$(JAVA_VERSION)'
+            mavenOptions: '-Xmx512m'
+            mavenAuthenticateFeed: false
+
+        - task: PublishTestResults@2
+          displayName: 'Publicar resultados de testes'
+          inputs:
+            testResultsFormat: 'JUnit'
+            testResultsFiles: '**/surefire-reports/TEST-*.xml'
+            failTaskOnFailedTests: false
+
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publicar artefato JAR'
+          inputs:
+            PathtoPublish: '$(System.DefaultWorkingDirectory)/target/$(JAR_NAME)'
+            ArtifactName: '$(ARTIFACT_NAME)'
+            publishLocation: 'Container'
+
+# ============================
+# Stage 2 - Deploy (Release)
+# ============================
+- stage: Deploy
+  displayName: 'Deploy SysPlanner em Azure Web App'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+    - job: DeployJob
+      displayName: 'Deploy via Azure CLI'
+      steps:
+        - download: current
+          artifact: '$(ARTIFACT_NAME)'
+
+        - task: AzureCLI@2
+          displayName: 'Deploy JAR no Web App'
+          inputs:
+            azureSubscription: 'NOME-DA-SUA-SERVICE-CONNECTION'
+            scriptType: 'bash'
+            scriptLocation: 'inlineScript'
+            inlineScript: |
+              echo "Iniciando deploy no Web App $(APP_NAME)..."
+              ls -R .
+              JAR_PATH="$(Pipeline.Workspace)/$(ARTIFACT_NAME)/$(JAR_NAME)"
+              echo "Usando JAR: $JAR_PATH"
+
+              az webapp deploy \
+                --resource-group $(RG) \
+                --name $(APP_NAME) \
+                --type jar \
+                --src-path "$JAR_PATH"
+
+              echo "Deploy concluído. Aplicação: https://$(APP_NAME).azurewebsites.net"
