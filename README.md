@@ -318,26 +318,7 @@ Configuradas no Azure Repos:
 
 ---
 
-## 10. Links úteis (preencher após criação)
-
-- **Azure DevOps – Projeto SysPlanner**:  
-  `<link do projeto no Azure DevOps>`
-
-- **Pipeline de Build**:  
-  `<link da pipeline de build>`
-
-- **Pipeline de Release**:  
-  `<link da release pipeline>`
-
-- **Portal Azure – Resource Group**:  
-  `<link direto para o resource group rg-sysplanner-java>`
-
-- **Vídeo da Global Solution (YouTube)**:  
-  `<link do vídeo apresentado ao professor>`
-
----
-
-## 11. Checklist para a GS
+## 10. Checklist para a GS
 
 - [x] Código fonte em repositório privado no Azure Repos  
 - [x] Infraestrutura em Azure criada via **scripts CLI**  
